@@ -1,0 +1,6 @@
+{
+  "uuid": "net-tracker@ramin",
+  "name": "Net Tracker",
+  "description": "Top bar indicator: do bbc.com / youtube.com really answer?",
+  "shell-version": ["42"]
+}

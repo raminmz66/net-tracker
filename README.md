@@ -6,14 +6,17 @@ A tiny GNOME Shell extension that shows, in the top bar, whether your VPN really
 
 VPN apps can show "connected" while nothing gets through. Net Tracker pings `bbc.com` every 5 seconds and falls back to `youtube.com`. Both are blocked on some networks without a VPN, so a reply means the tunnel really works.
 
+When you don't need a VPN, Net Tracker automatically tests unblocked targets (`google.com`, fallback `aparat.com`). If direct internet responds, it quietly shows `DIRECT` without triggering false alarms.
+
 | Dot | Meaning |
 |-----|---------|
-| 🟢 `142 ms` | under 200 ms, no loss |
-| 🟡 `231 ms` | 200–250 ms |
+| 🟢 `142 ms` | under 200 ms, no loss (VPN active) |
+| 🟡 `231 ms` | 200–250 ms (VPN active) |
 | 🟠 `410 ms · 20% lost` | slower than 250 ms, or packets lost |
-| 🔴 `NO NET` | 3 checks in a row failed |
+| ⚪ `DIRECT` | direct internet working (VPN off) |
+| 🔴 `NO NET` | 3 checks in a row failed on both VPN and direct targets |
 
-You get a notification when the network dies, when it stays slow for a minute, and when it's back to normal.
+You get a notification when the network dies, when it stays slow for a minute, and when it's back to normal. Switching between VPN and direct internet is completely silent.
 
 A check is one ping every 5 seconds, so it uses almost no CPU or bandwidth. Replies from private IPs count as failures, because some blocking networks answer with a fake local address.
 

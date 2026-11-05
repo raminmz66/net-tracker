@@ -1,6 +1,7 @@
 {
   "uuid": "net-tracker@ramin",
   "name": "Net Tracker",
-  "description": "Top bar indicator: do bbc.com / youtube.com really answer?",
-  "shell-version": ["42"]
+  "description": "Top bar indicator: monitor VPN tunnel connectivity with smart direct-net fallback.",
+  "shell-version": ["42"],
+  "version": 2
 }

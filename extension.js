@@ -5,7 +5,8 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const S = ExtensionUtils.getCurrentExtension().imports.state;
 
 const UUID = 'net-tracker@ramin';
-const HOSTS = ['bbc.com', 'youtube.com'];
+const VPN_HOSTS = ['bbc.com', 'youtube.com'];
+const DIRECT_HOSTS = ['google.com', 'aparat.com'];
 
 class Extension {
     enable() {
@@ -43,8 +44,8 @@ class Extension {
     }
 
     // Try hosts in order; first latency wins, null if all fail.
-    async _ping(c) {
-        for (let h of HOSTS) {
+    async _ping(hosts, c) {
+        for (let h of hosts) {
             try {
                 let p = new Gio.Subprocess({
                     argv: ['ping', '-4', '-n', '-c1', '-W2', h],
@@ -68,10 +69,18 @@ class Extension {
         if (this._busy) return;
         this._busy = true;
         let c = this._cancel; // own cancellable: a check from before a disable/enable never leaks in
-        let ms = await this._ping(c);
+        let ms = await this._ping(VPN_HOSTS, c);
         if (c.is_cancelled()) return; // disabled meanwhile
+        let res;
+        if (ms !== null) {
+            res = ms;
+        } else {
+            let directMs = await this._ping(DIRECT_HOSTS, c);
+            if (c.is_cancelled()) return; // disabled meanwhile
+            res = directMs !== null ? 'direct' : null;
+        }
         this._busy = false;
-        this._win.push(ms);
+        this._win.push(res);
         this._win = this._win.slice(-6);
         let st = S.status(this._win);
         let r = S.step(this._track, st, GLib.get_monotonic_time() / 1000);

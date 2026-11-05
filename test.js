@@ -20,6 +20,14 @@ eq(S.status([50, null, 60]), { color: 'orange', label: '60 ms · 33% lost' }, 'o
 eq(S.status([50, 60, null, null]), { color: 'orange', label: '60 ms · 50% lost' }, 'latest fail');
 eq(S.status([50, null, null, null]), { color: 'red', label: 'NO NET' }, 'red');
 eq(S.status([null, null]), { color: 'orange', label: '— · 100% lost' }, 'two fails at start: not red, no NaN');
+eq(S.status(['direct']), { color: 'grey', label: 'DIRECT' }, 'direct single');
+eq(S.status([50, 60, 'direct']), { color: 'grey', label: 'DIRECT' }, 'switch from VPN to direct');
+eq(S.status(['direct', null, 'direct']), { color: 'grey', label: 'DIRECT' }, 'direct with single dropped check');
+eq(S.status([null, 'direct']), { color: 'grey', label: 'DIRECT' }, 'null then direct');
+eq(S.status(['direct', 'direct', 'direct']), { color: 'grey', label: 'DIRECT' }, 'all direct');
+eq(S.status([140, 'direct', null, null, null]), { color: 'red', label: 'NO NET' }, 'outage after direct');
+eq(S.status(['direct', 'direct', 55]), { color: 'green', label: '55 ms' }, 'switch from direct to VPN');
+eq(S.status(['direct', null, null, null]), { color: 'red', label: 'NO NET' }, '3 fails on direct is red');
 
 // notifications
 const run = (seq) => { let t, out = []; for (const [c, now] of seq) { const r = S.step(t, { color: c, label: 'L' }, now * 1000); t = r.track; out.push(r.note && r.note.title); } return out; };
@@ -31,4 +39,6 @@ eq(run([['orange', 0], ['orange', 30], ['green', 40], ['orange', 50], ['orange',
     [null, null, null, null, null], 'short orange: nothing, timer resets');
 eq(run([['grey', 0], ['green', 5]]), [null, null], 'green w/o episode');
 eq(run([['red', 0], ['green', 5], ['red', 10]]), ['Network dead', 'Back to normal', 'Network dead'], 'second red fires again');
+eq(run([['green', 0], ['grey', 5], ['grey', 10], ['green', 15]]), [null, null, null, null], 'vpn to direct transition silent');
+eq(run([['red', 0], ['grey', 5]]), ['Network dead', 'Back to normal'], 'red to direct recovers with back to normal');
 print('ok');

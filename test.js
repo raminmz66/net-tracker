@@ -34,7 +34,7 @@ const run = (seq) => { let t, out = []; for (const [c, now] of seq) { const r = 
 eq(run([['green', 0], ['red', 5], ['red', 10], ['red', 15], ['green', 20], ['green', 25]]),
     [null, 'Network dead', null, null, 'Back to normal', null], 'red episode');
 eq(run([['orange', 0], ['orange', 30], ['orange', 60], ['orange', 65], ['yellow', 70], ['green', 75]]),
-    [null, null, 'Network slow', null, 'Back to normal', null], 'slow episode');
+    [null, null, null, null, null, null], 'slow episode: silent');
 eq(run([['orange', 0], ['orange', 30], ['green', 40], ['orange', 50], ['orange', 100]]),
     [null, null, null, null, null], 'short orange: nothing, timer resets');
 eq(run([['grey', 0], ['green', 5]]), [null, null], 'green w/o episode');

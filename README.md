@@ -16,7 +16,7 @@ When you don't need a VPN, Net Tracker automatically tests unblocked targets (`g
 | ⚪ `DIRECT` | direct internet working (VPN off) |
 | 🔴 `NO NET` | 3 checks in a row failed on both VPN and direct targets |
 
-You get a notification when the network dies, when it stays slow for a minute, and when it's back to normal. Switching between VPN and direct internet is completely silent.
+You get a notification when the network dies and when it's back to normal. Switching between VPN and direct internet is completely silent.
 
 A check is one ping every 5 seconds, so it uses almost no CPU or bandwidth. Replies from private IPs count as failures, because some blocking networks answer with a fake local address.
 

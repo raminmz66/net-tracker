@@ -28,22 +28,16 @@ function status(w) {
     return { color: avg >= 200 ? 'yellow' : 'green', label };
 }
 
-// track: {color, since, slow, bad}; returns {track, note}
+// track: {color, bad}; returns {track, note}
 function step(t, st, now) {
-    t = Object.assign({ color: 'grey', since: null, slow: false, bad: false }, t);
+    t = Object.assign({ color: 'grey', bad: false }, t);
     let note = null, c = st.color;
     if (c === 'red' && t.color !== 'red') {
         note = { title: 'Network dead', body: 'No reply from bbc.com, youtube.com, or direct internet.' };
         t.bad = true;
-    } else if (c === 'orange') {
-        if (t.color !== 'orange') t.since = now;
-        if (!t.slow && now - t.since >= 60000) {
-            note = { title: 'Network slow', body: st.label };
-            t.slow = t.bad = true;
-        }
     } else if ((c === 'green' || c === 'yellow' || c === 'grey') && t.bad) {
         note = { title: 'Back to normal', body: st.label };
-        t.slow = t.bad = false;
+        t.bad = false;
     }
     t.color = c;
     return { track: t, note };
